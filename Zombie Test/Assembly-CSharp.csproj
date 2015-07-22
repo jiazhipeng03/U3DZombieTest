@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\CatController.cs" />
      <Compile Include="Assets\EnemyController.cs" />
+     <Compile Include="Assets\ScreenRelativePosition.cs" />
      <Compile Include="Assets\ZombieAnimator.cs" />
      <Compile Include="Assets\ZombieController.cs" />
  <Reference Include="UnityEngine.UI">
