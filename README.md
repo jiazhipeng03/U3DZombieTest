@@ -11,3 +11,7 @@ ZombieConga-Part1-Resources.zip includes the resources used in this program.
 
 2.Learn some about State Machines : Any State and Sub-state Machines(http://docs.unity3d.com/Manual/NestedStateMachines.html).
 
+Problems:
+
+1.What's the difference between calling Update and adding events in every frame of animation?
+Answer : Update is doing at every tick of game, it is more frequent than the other method. Events only effect at every second.
