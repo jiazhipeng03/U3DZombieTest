@@ -49,6 +49,7 @@
      <Compile Include="Assets\BackgroundRepeater.cs" />
      <Compile Include="Assets\CameraController.cs" />
      <Compile Include="Assets\CatController.cs" />
+     <Compile Include="Assets\CatUpdater.cs" />
      <Compile Include="Assets\EnemyController.cs" />
      <Compile Include="Assets\KittyCreator.cs" />
      <Compile Include="Assets\ScreenRelativePosition.cs" />
