@@ -3,13 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ZombieController : MonoBehaviour {
+	public AudioClip enemyContactSound;
+	public AudioClip catContactSound;
 	public float moveSpeed;
-	private Vector3 moveDirection;
 	public float turnSpeed;
+	private Vector3 moveDirection;
 	private List<Transform> congaLine = new List<Transform>();
+	private bool isInvincible = false;
+	private float timeSpentInvincible;
+	private int lives = 3;
 	[SerializeField]
 	private PolygonCollider2D[] colliders;
 	private int currentColliderIndex = 0;
+
 	public void SetColliderForSprite( int spriteNum )
 	{
 		colliders[currentColliderIndex].enabled = false;
@@ -19,12 +25,31 @@ public class ZombieController : MonoBehaviour {
 	void OnTriggerEnter2D( Collider2D other )
 	{
 		if(other.CompareTag("cat")) {
+			GetComponent<AudioSource>().PlayOneShot(catContactSound);
 			Transform followTarget = congaLine.Count == 0 ? transform : congaLine[congaLine.Count-1];
 			other.transform.parent.GetComponent<CatController>().JoinConga( followTarget, moveSpeed, turnSpeed );
 			congaLine.Add( other.transform );
+
+			if (congaLine.Count >= 5) {
+				Debug.Log("You won!");
+				Application.LoadLevel("WinScene");
+			}
 		}
-		else if (other.CompareTag("enemy")) {
-			Debug.Log ("Pardon me, ma'am.");
+		else if(!isInvincible && other.CompareTag("enemy")) {
+			GetComponent<AudioSource>().PlayOneShot(enemyContactSound);
+			isInvincible = true;
+			timeSpentInvincible = 0;
+			for( int i = 0; i < 2 && congaLine.Count > 0; i++ )
+			{
+				int lastIdx = congaLine.Count-1;
+				Transform cat = congaLine[ lastIdx ];
+				congaLine.RemoveAt(lastIdx);
+				cat.parent.GetComponent<CatController>().ExitConga();
+			}
+			if (--lives <= 0) {
+				Debug.Log("You lost!");
+				Application.LoadLevel("LoseScene");
+			}
 		}
 	}
 	// Use this for initialization
@@ -54,6 +79,22 @@ public class ZombieController : MonoBehaviour {
 			                 Quaternion.Euler( 0, 0, targetAngle ), 
 			                 turnSpeed * Time.deltaTime );
 		EnforceBounds ();
+		if (isInvincible)
+		{
+			//2
+			timeSpentInvincible += Time.deltaTime;
+			
+			//3
+			if (timeSpentInvincible < 3f) {
+				float remainder = timeSpentInvincible % .3f;
+				GetComponent<Renderer>().enabled = remainder > .15f; 
+			}
+			//4
+			else {
+				GetComponent<Renderer>().enabled = true;
+				isInvincible = false;
+			}
+		}
 	}
 	private void EnforceBounds()
 	{

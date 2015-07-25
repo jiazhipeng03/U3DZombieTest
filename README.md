@@ -20,4 +20,7 @@ Answer : Update is doing at every tick of game, it is more frequent than the oth
 Add parent object.
 
 3.The cat is not becoming conga immediately when zombie collides with it.
-Because transmitted animation is too long.
+Because animation's property "has exit time" is true, which forces the object not to play next animation before the current one ends.
+During the animation CatWiggle, cat collides with zombie, which makes its InConga is true; before it finishes the animation, cat collides with old lady, which causes its InConga is false.
+Therefore, it can't transmit to other animation when it finishes current animation, so it repeats CatWiggle again and again.
+Fix : set "has exit time" to be false.
